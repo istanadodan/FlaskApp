@@ -1,4 +1,4 @@
-from .common import db, func
+from .common import sqlAlchemyDb as db, func
 
 # Models
 class Profile(db.Model):

@@ -1,4 +1,4 @@
-from .common import db, func
+from .common import sqlAlchemyDb as db, func
 
 # 모델 정의
 class User(db.Model):
@@ -12,3 +12,13 @@ class User(db.Model):
         
     def __repr__(self):
         return f'<User {self.username}>'
+    
+    def to_json(self):
+        import json
+        # return json.dumps(self, default=lambda o: o if o in ['id','username','bio','create_at'] else None, sort_keys=True, indent=4)
+        # return json.dumps(self)
+        return {
+            'name':self.username,
+            'bio':self.bio,
+            'at':self.created_at
+        }

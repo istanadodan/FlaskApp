@@ -1,14 +1,29 @@
 from flask import render_template, Blueprint, jsonify
 from models import User
+import logging
 
+logger = logging.getLogger(__name__)
 users_bp = Blueprint('users', __name__)
 
 # 컨트롤러
-# function to render index page
 @users_bp.route('/users', methods=['GET'])
 def users():
-    users = User.query.all()
-    return jsonify([user.serialize() for user in users])
+    import service.ppt_create as ppt
+    from service.dto.user import User as UserDto
+    ppt.create_ppt()
+    entity_users = User.query.all()
+    users=[]
+    for u in entity_users:
+        u2 = dict()
+        for item in u.__dict__.items():
+            if not item[0] in UserDto.__dict__: continue
+            u2.update({item[0]:item[1]})
+
+        users.append(u2)
+        
+    logger.debug(f'users={users}')
+        
+    return jsonify([u for u in users])    
 
 @users_bp.route('/list')
 def list():    
